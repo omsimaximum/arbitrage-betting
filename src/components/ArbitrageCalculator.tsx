@@ -16,10 +16,10 @@ interface OddsState {
 
 export const ArbitrageCalculator: React.FC = () => {
 	const [state, setState] = React.useState<OddsState>({
-		totalStake: "1000",
+		totalStake: "0",
 		marketType: marketTypes[0],
-		bookA: { option1: "2.10", option2: "1.75" },
-		bookB: { option1: "1.80", option2: "2.20" },
+		bookA: { option1: "0.00", option2: "0.00" },
+		bookB: { option1: "0.00", option2: "0.00" },
 		lastUpdated: Date.now(),
 	});
 
@@ -68,9 +68,10 @@ export const ArbitrageCalculator: React.FC = () => {
 					<button
 						type="button"
 						onClick={refreshOdds}
-						className="inline-flex items-center gap-1 rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+						aria-label="Refresh and reset"
+						className="btn-ghost !border-[rgb(var(--border))] hover:bg-[rgb(245_247_248)] dark:hover:bg-neutral-800"
 					>
-						<RefreshCw className="h-4 w-4" /> Refresh
+						<RefreshCw className="h-4 w-4" /> <span className="hidden sm:inline">Refresh</span>
 					</button>
 				</CardHeader>
 				<CardContent>
@@ -80,7 +81,7 @@ export const ArbitrageCalculator: React.FC = () => {
 							<select
 								value={state.marketType}
 								onChange={e => handleChange("marketType", e.target.value)}
-								className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+								className="w-full px-3 py-2 text-sm"
 							>
 								{marketTypes.map(mt => (
 									<option key={mt} value={mt}>
@@ -97,7 +98,7 @@ export const ArbitrageCalculator: React.FC = () => {
 								step="0.01"
 								value={state.totalStake}
 								onChange={e => handleChange("totalStake", e.target.value)}
-								className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+								className="w-full px-3 py-2 text-sm"
 							/>
 						</div>
 						<fieldset className="space-y-2">
@@ -110,7 +111,7 @@ export const ArbitrageCalculator: React.FC = () => {
 										step="0.01"
 										value={state.bookA.option1}
 										onChange={e => handleChange("bookA.option1", e.target.value)}
-										className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-neutral-900 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+										className="w-full px-2 py-1.5 text-sm"
 									/>
 								</div>
 								<div className="space-y-1">
@@ -120,7 +121,7 @@ export const ArbitrageCalculator: React.FC = () => {
 										step="0.01"
 										value={state.bookA.option2}
 										onChange={e => handleChange("bookA.option2", e.target.value)}
-										className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-neutral-900 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+										className="w-full px-2 py-1.5 text-sm"
 									/>
 								</div>
 							</div>
@@ -135,7 +136,7 @@ export const ArbitrageCalculator: React.FC = () => {
 										step="0.01"
 										value={state.bookB.option1}
 										onChange={e => handleChange("bookB.option1", e.target.value)}
-										className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-neutral-900 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+										className="w-full px-2 py-1.5 text-sm"
 									/>
 								</div>
 								<div className="space-y-1">
@@ -145,7 +146,7 @@ export const ArbitrageCalculator: React.FC = () => {
 										step="0.01"
 										value={state.bookB.option2}
 										onChange={e => handleChange("bookB.option2", e.target.value)}
-										className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-neutral-900 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+										className="w-full px-2 py-1.5 text-sm"
 									/>
 								</div>
 							</div>
@@ -168,12 +169,12 @@ export const ArbitrageCalculator: React.FC = () => {
 								return (
 									<div
 										key={c.id}
-										className={`rounded-md border p-3 text-sm flex flex-col gap-1 ${
+										className={`rounded-lg border p-3 text-sm flex flex-col gap-1 transition-colors ${
 											c.profitable
 												? isBest
-													? "border-green-600 bg-green-50 dark:bg-green-950"
+													? "border-green-600 bg-green-100/70 dark:bg-green-950"
 													: "border-green-400 bg-green-50/60 dark:bg-green-950/40"
-												: "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-neutral-800"
+												: "border-[rgb(var(--border))] bg-[rgba(var(--surface),0.65)] dark:border-gray-700 dark:bg-neutral-800"
 										}`}
 									>
 										<div className="flex flex-wrap items-center justify-between gap-2">
@@ -195,26 +196,27 @@ export const ArbitrageCalculator: React.FC = () => {
 											<span>Arb %: {c.arbitragePercentage.toFixed(4)}</span>
 											{c.profitable && <span>ROI: {c.roi.toFixed(2)}%</span>}
 										</div>
-										{c.profitable && (
-											<div className="grid grid-cols-2 gap-2 text-xs mt-2">
-												<div className="space-y-0.5">
-													<p className="font-medium">Stake 1</p>
-													<p>{formatCurrency(c.stake1)}</p>
+											{c.profitable && (
+												<div className="mt-2 space-y-2 text-xs">
+													<div className="grid sm:grid-cols-2 gap-2">
+														<div className="space-y-0.5">
+															<p className="font-medium">Stake 1</p>
+															<p>{formatCurrency(c.stake1)}</p>
+															<p className="text-[10px] text-gray-600 dark:text-gray-400">{c.stake1.toFixed(2)} × {c.odds.odd1.toFixed(2)} = {formatCurrency(c.returns.ret1)}</p>
+														</div>
+														<div className="space-y-0.5">
+															<p className="font-medium">Stake 2</p>
+															<p>{formatCurrency(c.stake2)}</p>
+															<p className="text-[10px] text-gray-600 dark:text-gray-400">{c.stake2.toFixed(2)} × {c.odds.odd2.toFixed(2)} = {formatCurrency(c.returns.ret2)}</p>
+														</div>
+														<div className="space-y-0.5">
+															<p className="font-medium">Guaranteed Profit</p>
+															<p>{formatCurrency(c.profit)}</p>
+															<p className="text-[10px] text-gray-600 dark:text-gray-400">Guaranteed Payout: {formatCurrency(Math.min(c.returns.ret1, c.returns.ret2))}</p>
+														</div>
+													</div>
 												</div>
-												<div className="space-y-0.5">
-													<p className="font-medium">Stake 2</p>
-													<p>{formatCurrency(c.stake2)}</p>
-												</div>
-												<div className="space-y-0.5">
-													<p className="font-medium">Guaranteed Profit</p>
-													<p>{formatCurrency(c.profit)}</p>
-												</div>
-												<div className="space-y-0.5">
-													<p className="font-medium">Returns</p>
-													<p>{formatCurrency(Math.min(c.returns.ret1, c.returns.ret2))}</p>
-												</div>
-											</div>
-										)}
+											)}
 										{!c.profitable && (
 											<p className="text-xs text-gray-500 mt-1">Not profitable</p>
 										)}
@@ -235,25 +237,31 @@ export const ArbitrageCalculator: React.FC = () => {
 					</CardHeader>
 					<CardContent>
 						{best ? (
-							<div className="space-y-3 text-sm">
-								<p className="font-medium">{best.selection}</p>
-								<p className="text-xs text-gray-600 dark:text-gray-400">Arbitrage %: {best.arbitragePercentage.toFixed(4)}</p>
-								<div className="grid grid-cols-2 gap-3 text-xs">
-									<div>
+							<div className="space-y-4 text-sm">
+								<div>
+									<p className="font-medium">{best.selection}</p>
+									<p className="text-xs text-gray-600 dark:text-gray-400">Arbitrage %: {best.arbitragePercentage.toFixed(4)}</p>
+								</div>
+								<div className="grid grid-cols-2 gap-4 text-xs">
+									<div className="space-y-0.5">
 										<p className="font-semibold">Stake 1</p>
 										<p>{formatCurrency(best.stake1)}</p>
+										<p className="text-[10px] text-gray-600 dark:text-gray-400">{best.stake1.toFixed(2)} × {best.odds.odd1.toFixed(2)} = {formatCurrency(best.returns.ret1)}</p>
 									</div>
-									<div>
+									<div className="space-y-0.5">
 										<p className="font-semibold">Stake 2</p>
 										<p>{formatCurrency(best.stake2)}</p>
+										<p className="text-[10px] text-gray-600 dark:text-gray-400">{best.stake2.toFixed(2)} × {best.odds.odd2.toFixed(2)} = {formatCurrency(best.returns.ret2)}</p>
 									</div>
-									<div>
-										<p className="font-semibold">Profit</p>
+									<div className="space-y-0.5">
+										<p className="font-semibold">Guaranteed Payout</p>
+										<p>{formatCurrency(Math.min(best.returns.ret1, best.returns.ret2))}</p>
+										<p className="text-[10px] text-gray-600 dark:text-gray-400">Profit = Payout - Stake</p>
+									</div>
+									<div className="space-y-0.5">
+										<p className="font-semibold">Profit / ROI</p>
 										<p className="text-green-600 dark:text-green-400">{formatCurrency(best.profit)}</p>
-									</div>
-									<div>
-										<p className="font-semibold">ROI</p>
-										<p className="text-green-600 dark:text-green-400">{best.roi.toFixed(2)}%</p>
+										<p className="text-[10px] text-gray-600 dark:text-gray-400">ROI {best.roi.toFixed(2)}%</p>
 									</div>
 								</div>
 								<p className="text-xs text-gray-500">Updated: {new Date(state.lastUpdated).toLocaleTimeString()}</p>

@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
+/* CSS Variables for theming */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 250 250 250; /* subtle off-white background */
+  --surface: 255 255 255; /* cards */
+  --foreground: 30 30 30;
+  --muted: 110 110 115;
+  --border: 223 226 230;
+  --accent: 37 99 235;
+  --accent-foreground: 255 255 255;
+  --ring: 59 130 246;
+  --success: 22 163 74;
+  --danger: 220 38 38;
+}
+
+.dark {
+  --background: 16 16 16;
+  --surface: 26 26 26;
+  --foreground: 235 235 235;
+  --muted: 155 155 155;
+  --border: 55 55 55;
+  --accent: 59 130 246;
+  --accent-foreground: 255 255 255;
+  --ring: 37 99 235;
+  --success: 34 197 94;
+  --danger: 248 113 113;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --color-border: rgb(var(--border));
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .25s, color .25s;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Form Controls */
+input, select, textarea {
+  background: rgb(var(--surface));
+  color: rgb(var(--foreground));
+  border: 1px solid rgb(var(--border));
+  border-radius: .5rem;
 }
+input::placeholder, textarea::placeholder { color: rgb(var(--muted)); }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: rgb(var(--ring));
+  box-shadow: 0 0 0 2px rgba(var(--ring), .35);
+  background: rgb(var(--surface));
+}
+.dark input:focus, .dark select:focus, .dark textarea:focus { box-shadow: 0 0 0 2px rgba(var(--ring), .4); }
+
+.themed-border {
+  border-color: rgb(var(--border));
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  border: 1px solid rgb(var(--border));
+  padding: .375rem .75rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  border-radius: .375rem;
+  transition: background-color .15s;
+}
+.btn-ghost:hover { background: rgb(245 247 248); }
+.dark .btn-ghost:hover { background: rgb(38 38 38); }
+
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  border: 1px solid rgb(var(--accent));
+  background: linear-gradient(180deg, rgba(var(--accent),0.95), rgba(var(--accent),1));
+  color: rgb(var(--accent-foreground));
+  padding: .5rem .9rem;
+  font-size: .8125rem;
+  line-height: 1.1rem;
+  font-weight: 600;
+  letter-spacing: .25px;
+  border-radius: .5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 1px 1px rgba(0,0,0,.08);
+  transition: filter .15s, box-shadow .2s;
+}
+.btn-accent:hover { filter: brightness(1.06); box-shadow: 0 3px 6px rgba(0,0,0,.18), 0 1px 2px rgba(0,0,0,.12); }
