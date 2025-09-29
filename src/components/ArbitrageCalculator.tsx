@@ -169,12 +169,12 @@ export const ArbitrageCalculator: React.FC = () => {
 								return (
 									<div
 										key={c.id}
-										className={`rounded-lg border p-3 text-sm flex flex-col gap-1 transition-colors ${
+										className={`rounded-lg border p-3 text-sm flex flex-col gap-1 transition-colors relative overflow-hidden ${
 											c.profitable
 												? isBest
-													? "border-green-600 bg-green-100/70 dark:bg-green-950"
-													: "border-green-400 bg-green-50/60 dark:bg-green-950/40"
-												: "border-[rgb(var(--border))] bg-[rgba(var(--surface),0.65)] dark:border-gray-700 dark:bg-neutral-800"
+													? "border-neutral-900 bg-neutral-950 text-white ring-1 ring-neutral-700/50 shadow-sm dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+													: "border-neutral-800 bg-neutral-900 text-white hover:bg-neutral-800 dark:border-neutral-700 dark:bg-neutral-850 dark:hover:bg-neutral-800 dark:text-neutral-100"
+												: "border-[rgb(var(--border))] bg-[rgb(var(--surface))] text-[rgb(var(--foreground))] hover:bg-[rgb(245_246_247)] dark:border-gray-700 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-750"
 										}`}
 									>
 										<div className="flex flex-wrap items-center justify-between gap-2">
@@ -183,8 +183,8 @@ export const ArbitrageCalculator: React.FC = () => {
 												<span
 													className={`text-xs font-semibold inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
 														isBest
-															? "bg-green-600 text-white"
-															: "bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100"
+															? "bg-neutral-950 text-white dark:bg-neutral-700"
+															: "bg-neutral-800 text-white dark:bg-neutral-700 dark:text-neutral-100"
 													}`}
 												>
 													✅ {isBest ? "Best Surebet" : "Profitable"}
@@ -202,17 +202,17 @@ export const ArbitrageCalculator: React.FC = () => {
 														<div className="space-y-0.5">
 															<p className="font-medium">Stake 1</p>
 															<p>{formatCurrency(c.stake1)}</p>
-															<p className="text-[10px] text-gray-600 dark:text-gray-400">{c.stake1.toFixed(2)} × {c.odds.odd1.toFixed(2)} = {formatCurrency(c.returns.ret1)}</p>
+															<p className="text-[10px] text-gray-300 dark:text-green-300">{c.stake1.toFixed(2)} × {c.odds.odd1.toFixed(2)} = {formatCurrency(c.returns.ret1)}</p>
 														</div>
 														<div className="space-y-0.5">
 															<p className="font-medium">Stake 2</p>
 															<p>{formatCurrency(c.stake2)}</p>
-															<p className="text-[10px] text-gray-600 dark:text-gray-400">{c.stake2.toFixed(2)} × {c.odds.odd2.toFixed(2)} = {formatCurrency(c.returns.ret2)}</p>
+															<p className="text-[10px] text-gray-300 dark:text-green-300">{c.stake2.toFixed(2)} × {c.odds.odd2.toFixed(2)} = {formatCurrency(c.returns.ret2)}</p>
 														</div>
 														<div className="space-y-0.5">
 															<p className="font-medium">Guaranteed Profit</p>
 															<p>{formatCurrency(c.profit)}</p>
-															<p className="text-[10px] text-gray-600 dark:text-gray-400">Guaranteed Payout: {formatCurrency(Math.min(c.returns.ret1, c.returns.ret2))}</p>
+															<p className="text-[10px] text-gray-300 dark:text-green-300">Guaranteed Payout: {formatCurrency(Math.min(c.returns.ret1, c.returns.ret2))}</p>
 														</div>
 													</div>
 												</div>
