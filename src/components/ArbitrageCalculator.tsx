@@ -4,7 +4,7 @@ import React from "react";
 import { calculateArbitrage, formatCurrency } from "../lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-const marketTypes = ["Win/Lose", "Over/Under", "Odd/Even", "Handicap"];
+const marketTypes = ["Win/Lose", "Over/Under", "Odd/Even", "Handicap", "1 Way"];
 
 interface OddsState {
 	totalStake: string;
@@ -103,53 +103,57 @@ export const ArbitrageCalculator: React.FC = () => {
 						</div>
 						<fieldset className="space-y-2">
 							<legend className="text-sm font-semibold">Bookmaker A Odds</legend>
-							<div className="grid grid-cols-2 gap-2">
-								<div className="space-y-1">
-									<label className="text-xs text-gray-600 dark:text-gray-400">Option 1</label>
-									<input
-										type="number"
-										step="0.01"
-										value={state.bookA.option1}
-										onChange={e => handleChange("bookA.option1", e.target.value)}
-										className="w-full px-2 py-1.5 text-sm"
-									/>
-								</div>
-								<div className="space-y-1">
-									<label className="text-xs text-gray-600 dark:text-gray-400">Option 2</label>
-									<input
-										type="number"
-										step="0.01"
-										value={state.bookA.option2}
-										onChange={e => handleChange("bookA.option2", e.target.value)}
-										className="w-full px-2 py-1.5 text-sm"
-									/>
-								</div>
-							</div>
+									<div className={`grid ${state.marketType === '1 Way' ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
+										<div className="space-y-1">
+											<label className="text-xs text-gray-600 dark:text-gray-400">Option 1</label>
+											<input
+												type="number"
+												step="0.01"
+												value={state.bookA.option1}
+												onChange={e => handleChange("bookA.option1", e.target.value)}
+												className="w-full px-2 py-1.5 text-sm"
+											/>
+										</div>
+										{state.marketType !== '1 Way' && (
+										<div className="space-y-1">
+											<label className="text-xs text-gray-600 dark:text-gray-400">Option 2</label>
+											<input
+												type="number"
+												step="0.01"
+												value={state.bookA.option2}
+												onChange={e => handleChange("bookA.option2", e.target.value)}
+												className="w-full px-2 py-1.5 text-sm"
+											/>
+										</div>
+										)}
+									</div>
 						</fieldset>
 						<fieldset className="space-y-2">
 							<legend className="text-sm font-semibold">Bookmaker B Odds</legend>
-							<div className="grid grid-cols-2 gap-2">
-								<div className="space-y-1">
-									<label className="text-xs text-gray-600 dark:text-gray-400">Option 1</label>
-									<input
-										type="number"
-										step="0.01"
-										value={state.bookB.option1}
-										onChange={e => handleChange("bookB.option1", e.target.value)}
-										className="w-full px-2 py-1.5 text-sm"
-									/>
-								</div>
-								<div className="space-y-1">
-									<label className="text-xs text-gray-600 dark:text-gray-400">Option 2</label>
-									<input
-										type="number"
-										step="0.01"
-										value={state.bookB.option2}
-										onChange={e => handleChange("bookB.option2", e.target.value)}
-										className="w-full px-2 py-1.5 text-sm"
-									/>
-								</div>
-							</div>
+									<div className={`grid ${state.marketType === '1 Way' ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
+										<div className="space-y-1">
+											<label className="text-xs text-gray-600 dark:text-gray-400">Option 1</label>
+											<input
+												type="number"
+												step="0.01"
+												value={state.bookB.option1}
+												onChange={e => handleChange("bookB.option1", e.target.value)}
+												className="w-full px-2 py-1.5 text-sm"
+											/>
+										</div>
+										{state.marketType !== '1 Way' && (
+										<div className="space-y-1">
+											<label className="text-xs text-gray-600 dark:text-gray-400">Option 2</label>
+											<input
+												type="number"
+												step="0.01"
+												value={state.bookB.option2}
+												onChange={e => handleChange("bookB.option2", e.target.value)}
+												className="w-full px-2 py-1.5 text-sm"
+											/>
+										</div>
+										)}
+									</div>
 						</fieldset>
 					</form>
 				</CardContent>

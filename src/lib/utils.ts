@@ -10,7 +10,7 @@ export const formatCurrency = (value: number) =>
 
 export interface ArbitrageInput {
   totalStake: number;
-  marketType: string;
+  marketType: string; // e.g. "Win/Lose", "1 Way"
   bookA: { option1: number | null; option2: number | null };
   bookB: { option1: number | null; option2: number | null };
 }
@@ -33,15 +33,17 @@ export function calculateArbitrage(input: ArbitrageInput): {
   best: CombinationResult | null;
   hasProfitable: boolean;
 } {
-  const { bookA, bookB, totalStake } = input;
-  const combos: Array<{
-    id: string;
-    fromA: keyof typeof bookA;
-    fromB: keyof typeof bookB;
-  }> = [
-    { id: "A1_B2", fromA: "option1", fromB: "option2" },
-    { id: "A2_B1", fromA: "option2", fromB: "option1" },
-  ];
+  const { bookA, bookB, totalStake, marketType } = input;
+
+  // For classic 2-way arbitrage we look for cross-book opposite selections (A1+B2, A2+B1)
+  // For "1 Way" mode the user is pairing a single line across two books (e.g. Over vs Under) so we only need A1 + B1.
+  const combos: Array<{ id: string; fromA: keyof typeof bookA; fromB: keyof typeof bookB }> =
+    marketType === "1 Way"
+      ? [{ id: "A1_B1", fromA: "option1", fromB: "option1" }]
+      : [
+          { id: "A1_B2", fromA: "option1", fromB: "option2" },
+          { id: "A2_B1", fromA: "option2", fromB: "option1" },
+        ];
 
   const results: CombinationResult[] = [];
 
@@ -68,9 +70,13 @@ export function calculateArbitrage(input: ArbitrageInput): {
       profit = guaranteedPayout - totalStake;
       roi = (profit / totalStake) * 100;
     }
+    const selectionLabel = marketType === "1 Way"
+      ? `Book A Option 1 + Book B Option 1`
+      : `Book A ${c.fromA.replace("option", "Option ")} + Book B ${c.fromB.replace("option", "Option ")}`;
+
     results.push({
       id: c.id,
-      selection: `Book A ${c.fromA.replace("option", "Option ")} + Book B ${c.fromB.replace("option", "Option ")}`,
+      selection: selectionLabel,
       odds: { odd1, odd2 },
       arbitragePercentage: arbPct,
       profitable,
